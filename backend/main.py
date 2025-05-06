@@ -4,7 +4,7 @@ from pydantic import BaseModel
 from fastapi.middleware.cors import CORSMiddleware
 
 # Configura Gemini API (⚠ pon tu API KEY aquí directamente solo para pruebas locales)
-genai.configure(api_key="AIzaSyBxoijomhUZGZR5bppTCWxNDZAVLLUop0Q")
+genai.configure(api_key="AIzaSyDqLmFMdbXwnrCPQRbYxTy3s7N9yZO5SPo")
 
 app = FastAPI()
 
@@ -33,7 +33,7 @@ class UserInput(BaseModel):
 def get_case():
     try:
         model = genai.GenerativeModel('models/gemini-1.5-pro-latest')
-        prompt = "Elabora un caso de estudio corto relacionado con la privacidad y protección de datos bajo la norma ISO/IEC 29100."
+        prompt = "Elabora un caso de estudio corto relacionado con la privacidad y protección de datos bajo la norma ISO/IEC 29100, sólo pon el caso de estudio, no la solución."
         response = model.generate_content(prompt)
         return {"case_study": response.text}
     except Exception as e:
