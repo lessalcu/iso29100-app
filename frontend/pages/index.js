@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import Head from 'next/head';
 import axios from 'axios';
 import ReactMarkdown from 'react-markdown';
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 export default function Home() {
   const [caseStudy, setCaseStudy] = useState('');
@@ -30,74 +32,140 @@ export default function Home() {
     setComparison(res.data.comparison);
   };
 
+  const resetAll = () => {
+    setCaseStudy('');
+    setManualInput('');
+    setIaSolution('');
+    setComparison('');
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-100 via-white to-green-100 flex flex-col items-center justify-center p-6">
-      <div className="bg-white shadow-2xl rounded-2xl p-8 max-w-4xl w-full space-y-6">
-        <h1 className="text-4xl font-bold text-center text-blue-700 mb-4">
-          🛡️ ISO/IEC 29100 - Casos de Estudio
-        </h1>
+    <>
+      <Head>
+        <title>ISO/IEC 29100 - Casos de Estudio</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </Head>
 
-        {/* Botón para generar caso */}
-        <button
-          className="bg-blue-600 hover:bg-blue-700 text-white px-6 py-3 rounded-lg w-full text-lg transition"
-          onClick={getCase}
-        >
-          Generar Caso de Estudio
-        </button>
+      <div className="main-content ">
+        <div className="bg-white shadow rounded p-4 p-md-5 mb-5">
+          <h2 className="text-center text-black fw-bold display-5 mb-4">
+            🛡️ ISO/IEC 29100 - Casos de Estudio
+          </h2>
 
-        {/* Mostrar caso solo si existe */}
-        {caseStudy && (
-          <div className="bg-gray-50 p-4 rounded-xl border border-gray-300 shadow-sm prose max-w-none">
-            <h2 className="text-2xl font-semibold text-blue-600 mb-2">Caso Generado</h2>
-            <ReactMarkdown>{caseStudy}</ReactMarkdown>
+          <div className="text-center mb-4 d-grid gap-2 d-md-flex justify-content-md-center">
+            <button className="btn btn-primary btn-lg" onClick={getCase}>
+              Generar Caso de Estudio
+            </button>
+            <button className="btn btn-outline-danger btn-lg" onClick={resetAll}>
+              Limpiar Todo
+            </button>
           </div>
-        )}
 
-        {/* Mostrar textarea y botones solo si ya hay un caso */}
-        {caseStudy && (
-          <>
-            <textarea
-              className="w-full border border-gray-300 p-3 rounded-lg mt-4"
-              rows="8"
-              value={manualInput}
-              onChange={(e) => setManualInput(e.target.value)}
-              placeholder="Escribe tu solución manual aquí..."
-            />
+          {caseStudy && (
+            <div className="card border-info mb-4">
+              <div className="card-header bg-info text-white fs-3 fw-bold fw-cursive">
+                Caso Generado
+              </div>
+              <div className="card-body">
+                <ReactMarkdown>{caseStudy}</ReactMarkdown>
+              </div>
+            </div>
+          )}
 
-            <div className="flex space-x-4 mt-4">
-              <button
-                className="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg flex-1 transition"
-                onClick={getSolution}
-              >
+          {caseStudy && (
+            <div className="row">
+              <div className="col-md-6 mb-4">
+                <div className="card h-100">
+                  <div className="card-header bg-light">
+                    <strong>Tu Respuesta</strong>
+                  </div>
+                  <div className="card-body">
+                    <textarea
+                      className="form-control"
+                      rows="10"
+                      value={manualInput}
+                      onChange={(e) => setManualInput(e.target.value)}
+                      placeholder="Escribe tu solución aquí..."
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <div className="col-md-6 mb-4">
+                <div className="card h-100">
+                  <div className="card-header bg-success text-white">
+                    <strong>Solución Generada por IA</strong>
+                  </div>
+                  <div className="card-body">
+                    {iaSolution ? (
+                      <ReactMarkdown>{iaSolution}</ReactMarkdown>
+                    ) : (
+                      <div className="text-muted">Presiona el botón para obtener la solución.</div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {caseStudy && (
+            <div className="d-flex justify-content-center gap-3 flex-wrap mb-4">
+              <button className="btn btn-success btn-lg" onClick={getSolution}>
                 Obtener Solución IA
               </button>
               <button
-                className="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded-lg flex-1 transition"
+                className="btn btn-secondary btn-lg"
                 onClick={compareAnswers}
                 disabled={!iaSolution}
               >
                 Comparar Respuestas
               </button>
             </div>
-          </>
-        )}
+          )}
 
-        {/* Mostrar solución IA si ya fue generada */}
-        {iaSolution && (
-          <div className="bg-green-50 p-4 rounded-xl border border-green-300 shadow-sm prose max-w-none mt-4">
-            <h2 className="text-xl font-semibold text-green-700 mb-2">Solución IA</h2>
-            <ReactMarkdown>{iaSolution}</ReactMarkdown>
-          </div>
-        )}
-
-        {/* Mostrar comparación si ya existe */}
-        {comparison && (
-          <div className="bg-purple-50 p-4 rounded-xl border border-purple-300 shadow-sm prose max-w-none mt-4">
-            <h2 className="text-xl font-semibold text-purple-700 mb-2">Resultado de Comparación</h2>
-            <ReactMarkdown>{comparison}</ReactMarkdown>
-          </div>
-        )}
+          {comparison && (
+            <div className="card border-primary mt-4">
+              <div className="card-header bg-primary text-white fs-5">
+                Resultado de la Comparación
+              </div>
+              <div className="card-body">
+                <ReactMarkdown>{comparison}</ReactMarkdown>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+
+      <footer className="footer">
+        GRUPO 9 - CARRASCO - MAYORGA - OLIVARES - SALAS - 2025/2025
+      </footer>
+
+      <style jsx global>{`
+        html,
+        body {
+          height: 100%;
+          margin: 0;
+          padding: 0;
+        }
+
+        #__next {
+          display: flex;
+          flex-direction: column;
+          min-height: 100vh;
+        }
+
+        .main-content {
+          flex: 1;
+        }
+
+        .footer {
+          background-color: #f8f9fa;
+          padding: 1rem;
+          font-size: 0.9rem;
+          color:rgb(71, 79, 87);
+          text-align: center;
+        }
+      `}</style>
+    </>
   );
 }
