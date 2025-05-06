@@ -10,8 +10,10 @@ export default function Home() {
   const [iaSolution, setIaSolution] = useState('');
   const [comparison, setComparison] = useState('');
 
+    const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000';
+
   const getCase = async () => {
-    const res = await axios.get('http://localhost:8000/case');
+    const res = await axios.get('${backendUrl}/case');
     setCaseStudy(res.data.case_study);
     setManualInput('');
     setIaSolution('');
@@ -19,12 +21,12 @@ export default function Home() {
   };
 
   const getSolution = async () => {
-    const res = await axios.post('http://localhost:8000/solve', { case_study: caseStudy });
+    const res = await axios.post('${backendUrl}/solve', { case_study: caseStudy });
     setIaSolution(res.data.ia_solution);
   };
 
   const compareAnswers = async () => {
-    const res = await axios.post('http://localhost:8000/compare', {
+    const res = await axios.post('${backendUrl}/compare', {
       manual_response: manualInput,
       case_study: caseStudy,
       ia_solution: iaSolution
@@ -46,7 +48,7 @@ export default function Home() {
         <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
 
-      <div className="main-content ">
+      <div className="main-content">
         <div className="bg-white shadow rounded p-4 p-md-5 mb-5">
           <h2 className="text-center text-black fw-bold display-5 mb-4">
             🛡️ ISO/IEC 29100 - Casos de Estudio
@@ -162,7 +164,7 @@ export default function Home() {
           background-color: #f8f9fa;
           padding: 1rem;
           font-size: 0.9rem;
-          color:rgb(71, 79, 87);
+          color: rgb(71, 79, 87);
           text-align: center;
         }
       `}</style>
