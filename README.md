@@ -2,7 +2,6 @@
 
 ### 📄 README.md
 
-```markdown
 # 🌐 ISO/IEC 29100 Case Study App
 
 Este proyecto es una aplicación web interactiva que permite generar, resolver y comparar casos de estudio relacionados con la norma **ISO/IEC 29100 (Privacidad y Protección de Datos)** usando inteligencia artificial (Gemini).  
